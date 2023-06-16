@@ -1,0 +1,206 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:31 GMT -->
+
+<head>
+    <meta charset="utf-8">
+    <title>Evara Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>  -->
+    <!-- <style>
+        img {
+        display: block;
+      
+        /* This rule is very important, please don't ignore this */
+        max-width: 100%;
+      }
+    </style> -->
+
+
+    <link rel="stylesheet" href="https://unpkg.com/cropperjs/dist/cropper.min.css" />
+
+
+    <link href="assets/css/main.css" rel="stylesheet" type="text/css" />
+
+
+</head>
+
+<body>
+    <div class="screen-overlay"></div>
+
+    <main class="main-wrap">
+
+        <section class="content-main">
+            <form id="myForm" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-9">
+                        <div class="content-header">
+                            <h2 class="content-title">Add Banner </h2>
+                            <div>
+                                <button class="btn btn-md rounded font-sm hover-up" name="cropper" id="crop-btn"
+                                    type="button">Crop</button>
+                                <button class="btn btn-light rounded font-sm mr-5 text-body hover-up" type="button">Save
+                                    to draft</button>
+                                <button class="btn btn-md rounded font-sm hover-up" name="uploader" type="submit"
+                                    id="btnUpload">Publich</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Basic</h4>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Banner title</label>
+                                    <input type="text" placeholder="Type here" value="<%=bannerData.title %>"
+                                        name="title" class="form-control" id="title">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Full description</label>
+                                    <textarea placeholder="Type here" name="description" id="description"
+                                        value="<%=bannerData.description %>" class="form-control" rows="4"></textarea>
+                                </div>
+                                <input type="hidden" name="editId" value="<%=bannerData._id%>" id="bannerId">
+
+                                <div class="mb-4">
+                                    <label class="form-label">Location</label>
+                                    <input type="text" placeholder="%" value="<%=bannerData.location %>"
+                                        class="form-control" name="location" id="location">
+                                </div>
+                                <label class="form-check mb-4">
+                                    <input class="form-check-input" type="checkbox" value="">
+                                    <span class="form-check-label"> Make a template </span>
+                                </label>
+
+                            </div>
+                        </div> <!-- card end// -->
+                        <!-- card end// -->
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4>Media</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="input-upload">
+                                    <input id="inputImage" class="form-control img" type="file" value="" alt="image">
+
+
+
+                                    <img src="/banner_images/<%= bannerData.bannerImage %>" class="i" alt=""
+                                        id="image-preview">
+
+
+
+                                </div>
+
+                            </div>
+                            <img id="croppedImage" src="#" alt="" />
+                        </div> <!-- card end// -->
+                        <!-- card end// -->
+                    </div>
+                </div>
+            </form>
+        </section> <!-- content-main end// -->
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script> ©, Find - Ecommerce Website .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        const inputImage = document.getElementById('inputImage');
+        const previewImage = document.getElementById('image-preview');
+        const cropButton = document.getElementById('crop-btn');
+        const croppedImage = document.getElementById('croppedImage')
+        let cropper;
+
+        inputImage.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = (event) => {
+                previewImage.src = event.target.result;
+                cropper = new Cropper(previewImage, {
+                    aspectRatio: 1,
+                    viewMode: 3,
+                });
+            };
+
+            reader.readAsDataURL(file);
+        })
+        cropButton.addEventListener('click', () => {
+            const canvas = cropper.getCroppedCanvas();
+            canvas.toBlob((blob) => {
+                // const formData = new FormData();
+                // formData.append('croppedImage', blob, 'croppedImage.jpg');
+                console.log('/////')
+                console.log(croppedImage)
+                croppedImage.src = URL.createObjectURL(blob);
+
+                // Send the cropped image to the server using AJAX or fetch
+            });
+        })
+        const form = document.getElementById('myForm');
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            // Get the cropped image data from the Cropper instance
+            const canvas = cropper.getCroppedCanvas();
+            canvas.toBlob((blob) => {
+                // Create a FormData object and append the cropped image data
+                const formData = new FormData();
+                formData.append('croppedImage', blob, 'croppedImage.jpg');
+                formData.append('title', document.getElementById('title').value);
+                formData.append('description', document.getElementById('description').value);
+                formData.append('location', document.getElementById('location').value)
+                formData.append('editId', document.getElementById('bannerId').value)
+
+                console.log('}}}}}}')
+                console.log(formData)
+                // Send a POST request to the server with the cropped image data
+                fetch('/admin/add-banner', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then((response) => {
+                        // Handle the server response
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            });
+        });
+    </script>
+
+    <script src="https://unpkg.com/cropperjs/dist/cropper.min.js"></script>
+    <!DOCTYPE HTML>
+    <html lang="en">
+
+
+  

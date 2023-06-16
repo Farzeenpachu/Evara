@@ -1,0 +1,120 @@
+<section class="pt-150 pb-150">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 m-auto">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <div
+                            class="login_wrap widget-taber-content p-30 background-white border-radius-10 mb-md-5 mb-lg-0 mb-sm-5">
+                            <div class="padding_eight_all bg-white">
+                                <div class="heading_s1">
+                                    <h3 class="mb-30">OTP</h3>
+                                </div>
+                                <form action="/otpverify" method="post">
+                                    <div class="form-group">
+                                        <input type="text" name="Otp" placeholder="Ender OTP">
+                                    </div>
+
+                                    <div class="login_footer form-group">
+                                        
+                                        <div class="chek-form">
+                                            <% if(locals.error){%> 
+                                            <span>
+                                                <%= locals.error %>
+                                            </span>
+                                            <%}%>
+                                            <div style="display: flex;justify-content: space-between;">
+                                                <div>Resend otp in <span id="timer">00:10</span> minutes!</div>
+                                                <a href="#" style="float: right; display: none;" id="submitLink" onclick="resendOtp('<%=locals.Phone %>')">resend
+                                                    otp</a>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-fill-out btn-block hover-up"
+                                            name="otplogin">Submit</button>
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</main>
+
+<!-- Preloader Start -->
+<div id="preloader-active">
+    <div class="preloader d-flex align-items-center justify-content-center">
+        <div class="preloader-inner position-relative">
+            <div class="text-center">
+                <h5 class="mb-5">Now Loading</h5>
+                <div class="loader">
+                    <div class="bar bar1"></div>
+                    <div class="bar bar2"></div>
+                    <div class="bar bar3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Vendor JS-->
+
+</body>
+<script>
+    function resendOtp(Phone) {
+        $.ajax({
+            url: '/otplogin',
+            type: 'post',
+            data: ({ Phone: Phone, resend: true }),
+            success: ((response) => {
+                console.log(response)
+                if (response.status) {
+                    var threeMinutes = 10,
+                        display = document.getElementById('timer');
+                    startTimer(threeMinutes, display);
+                    document.getElementById('submitLink').style.display='none'
+                }
+            })
+        })
+    }
+
+    var timerInterval; // Declare a variable to store the interval ID
+
+    function startTimer(duration, display) {
+        var timer = duration, minutes, seconds;
+        timerInterval = setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            display.textContent = minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                timer = duration;
+                stopTimer()
+                document.getElementById('submitLink').style.display='block'
+            }
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval); // Clear the interval using the stored interval ID
+    }
+
+    window.onload = function () {
+        var threeMinutes = 10,
+            display = document.getElementById('timer');
+        startTimer(threeMinutes, display);
+
+    };
+</script>
